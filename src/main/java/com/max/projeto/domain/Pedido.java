@@ -1,7 +1,11 @@
 package com.max.projeto.domain;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,111 +14,77 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
-public class Endereço implements Serializable {
-	
-	
-	/**
-	 * 
-	 */
+public class Pedido implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String lagradouro;
-	private String numero;
-	private String complemento;
-	private String bairro;
-	private String cep;
-	
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date instante;
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
+	private Pagamento pagamento;
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	@ManyToOne
-	@JoinColumn(name = "cidade_id")
-	private Cidade cidade;
 	
-	public Endereço() {
+	@ManyToOne
+	@JoinColumn(name = "endereco_id")
+	private Endereço enderecoDeEntrega;
+	
+	@OneToMany(mappedBy="id.pedido")
+	private Set<ItemPedido> itens = new HashSet<>();
+	
+	public Pedido() {
 		
 	}
-	
-	
-
-	public Endereço(Integer id, String lagradouro, String numero, String complemento, String bairro, String cep,
-			Cliente cliente, Cidade cidade) {
+	public Pedido(Integer id, Date instante, Cliente cliente, Endereço enderecoDeEntrega) {
 		super();
 		this.id = id;
-		this.lagradouro = lagradouro;
-		this.numero = numero;
-		this.complemento = complemento;
-		this.bairro = bairro;
-		this.cep = cep;
+		this.instante = instante;
 		this.cliente = cliente;
-		this.cidade = cidade;
+		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
-
-
-
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getLagradouro() {
-		return lagradouro;
+	public Date getInstante() {
+		return instante;
 	}
-
-	public void setLagradouro(String lagradouro) {
-		this.lagradouro = lagradouro;
+	public void setInstante(Date instante) {
+		this.instante = instante;
 	}
-
-	public String getNumero() {
-		return numero;
+	public Pagamento getPagamento() {
+		return pagamento;
 	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
 	}
-
-	public String getComplemento() {
-		return complemento;
-	}
-
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
-	}
-
-	public String getBairro() {
-		return bairro;
-	}
-
-	public void setBairro(String bairro) {
-		this.bairro = bairro;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public void setCep(String cep) {
-		this.cep = cep;
-	}
-
 	public Cliente getCliente() {
 		return cliente;
 	}
-
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-
+	public Endereço getEnderecoDeEntrega() {
+		return enderecoDeEntrega;
+	}
+	public void setEnderecoDeEntrega(Endereço enderecoDeEntrega) {
+		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -122,7 +92,6 @@ public class Endereço implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -131,7 +100,7 @@ public class Endereço implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Endereço other = (Endereço) obj;
+		Pedido other = (Pedido) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -139,7 +108,11 @@ public class Endereço implements Serializable {
 			return false;
 		return true;
 	}
-
-
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
 
 }
