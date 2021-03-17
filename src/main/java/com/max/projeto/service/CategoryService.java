@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.max.projeto.domain.Categoria;
+import com.max.projeto.domain.Cliente;
 import com.max.projeto.dto.CategoriaDTO;
 import com.max.projeto.repositoryes.CategoriaRepository;
 import com.max.projeto.service.exception.DataIntegryti;
@@ -34,9 +35,11 @@ public class CategoryService {
 	}
 
 	public Categoria update(Categoria obj) {
-		find(obj.getId());
-		return obj = repo.save(obj);
+		Categoria newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
 
+	
 	}
 
 	public void delete(Integer id) {
@@ -62,4 +65,10 @@ public class CategoryService {
 	public Categoria fromDTO(CategoriaDTO objDTO) {
 		return new Categoria(objDTO.getId(),objDTO.getName());
 	}
+	
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setName(obj.getName());
+	
+	}
+
 }

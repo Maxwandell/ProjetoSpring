@@ -78,9 +78,10 @@ public class ProjetoSpringApplication implements CommandLineRunner {
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
 		p3.getCategorias().addAll(Arrays.asList(cat1));
-
+		
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3,cat4,cat5));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3));
+
 
 		Estado e1 = new Estado(null, "Minas Gerais");
 		Estado e2 = new Estado(null, "São Paulo");
@@ -106,6 +107,7 @@ public class ProjetoSpringApplication implements CommandLineRunner {
 		cli1.getEndereco().addAll(Arrays.asList(end2, end1));
 
 		clienteRepository.saveAll(Arrays.asList(cli1));
+
 		endereçoRepository.saveAll(Arrays.asList(end1, end2));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -114,6 +116,8 @@ public class ProjetoSpringApplication implements CommandLineRunner {
 		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, end2);
 
 		cli1.getPedido().addAll(Arrays.asList(ped1, ped2));
+		
+		
 
 		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
 		ped1.setPagamento(pagto1);
